@@ -1,23 +1,24 @@
-const express = require('express')
-// const job = require('./src/app')
-const dotenv = require('dotenv')
-dotenv.config()
-var cors = require('cors')
-const app = express()
-app.set('view engine','ejs');
+const app = require("./app");
+const sequelize = require("./config/db");
+const PORT = process.env.PORT || 5000;
 
-const path = require("path");
-app.use("/static", express.static(path.join(__dirname, "public")));
+async function setupConnectDB() {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    console.log("Database Connection successfully.");
+  } catch (error) {
+    console.log("Connection failure!");
+    console.log(error);
+    process.exit();
+  }
+}
 
-global.__basedir = __dirname;
-const mongodb = require('./src/connection/mongodb')
-mongodb.connect()
+async function init() {
+  await setupConnectDB();
+  app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+  });
+}
 
-app.use(express.json())
-app.use(cors())
-
-const port = 8082
-
-app.use('/', require('./src/app.routes'))
-
-app.listen(port, () => console.log(`Listening on port ${port}`))
+init();
