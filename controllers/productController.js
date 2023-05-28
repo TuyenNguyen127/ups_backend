@@ -259,7 +259,7 @@ const getProductbyID = async (req, res, next) => {
 const createProduct = async (req, res, next) => {
     try {
         const product = await Product.create({
-            name: req.body.parent,
+            name: req.body.name,
             category: req.body.category,
             description: req.body.description,
             firm: req.body.firm,
