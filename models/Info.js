@@ -14,108 +14,87 @@ module.exports = (sequelize, DataTypes) =>
                 // allowNull: false,
                 field: "product_id",
             },
-            Capacity: {
+            cong_suat: {
                 type: DataTypes.STRING,
             },
-            Technology: {
+        
+            // thông số đầu vào
+            dai_dien_ap: {
                 type: DataTypes.STRING,
             },
-            phaseNumber: {
+            tan_so_vao: {
                 type: DataTypes.STRING,
             },
-            isolationTransformer: {
+            so_pha: {
                 type: DataTypes.STRING,
             },
-
-            ACInputVoltage: {
+        
+            // thông số đầu ra
+            dien_ap: {
                 type: DataTypes.STRING,
             },
-            VoltageRange: {
-              type: DataTypes.STRING,
-            },
-            FrequencyRange: {
+            dien_ap_che_do_ac_quy: {
                 type: DataTypes.STRING,
             },
-            powerFactorIN: {
+            tan_so_ra: {
                 type: DataTypes.STRING,
             },
-
-            OutputACVoltage: {
+            dang_song: {
                 type: DataTypes.STRING,
             },
-            ACVoltageRegulator: {
+            thoi_gian_chuyen_mach: {
                 type: DataTypes.STRING,
             },
-            SynFrequencyRange: {
+        
+            // Thông số ắc quy
+            loai_ac_quy: {
                 type: DataTypes.STRING,
             },
-            BatteryFrequencyRange: {
+            thoi_gian_sac: {
                 type: DataTypes.STRING,
             },
-            timeACtobattery: {
+        
+            // Chức năng bảo vệ
+            bv_ngan_mach: {
                 type: DataTypes.STRING,
             },
-            timeInterverBypass: {
+            bv_xung: {
                 type: DataTypes.STRING,
             },
-            wave: {
+            canh_bao: {
                 type: DataTypes.STRING,
             },
-            powerFactorOUT: {
+            bv_qua_tai: {
                 type: DataTypes.STRING,
             },
-
-            battery: {
+            quan_ly_ac_quy: {
                 type: DataTypes.STRING,
             },
-            numberOfBattery: {
+        
+            // kết nối
+            cong_USB: {
                 type: DataTypes.STRING,
             },
-            ChargingCurrent: {
+        
+            //Môi trường hoạt động
+            do_on_hd: {
                 type: DataTypes.STRING,
             },
-            ChargingVoltage: {
+            nhiet_do_hd: {
                 type: DataTypes.STRING,
             },
-
-            ACMode: {
-              type: DataTypes.STRING,
-            },
-            batteryModeEfficiency: {
+            do_am_hd: {
                 type: DataTypes.STRING,
             },
-
-            LCDScreen: {
+            he_so_cong_suat: {
                 type: DataTypes.STRING,
             },
-            batteryWaring: {
+        
+            // Thông số vật lý
+            kich_thuoc: {
                 type: DataTypes.STRING,
             },
-            lowBattery: {
-                type: DataTypes.STRING,
-            },
-            overLoad: {
-                type: DataTypes.STRING,
-            },
-            error: {
-                type: DataTypes.STRING,
-            },
-
-            ProductDimensions: {
-                type: DataTypes.STRING,
-            },
-            mass: {
-                type: DataTypes.STRING,
-            },
-
-            NoiseLevel: {
-                type: DataTypes.STRING,
-            },
-            ActiveHumidity: {
-                type: DataTypes.STRING,
-            },
-
-            USB: {
+            trong_luong: {
                 type: DataTypes.STRING,
             },
         },

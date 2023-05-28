@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.STRING,
                 // allowNull: false,
             },
+            // img: {
+            //     type: Sequelize.ARRAY(Sequelize.TEXT),
+            //     defaultValue: [],
+            // }
         },{
             tableName: "Product",
         }

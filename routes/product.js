@@ -9,6 +9,8 @@ router.post(
   productController.importExcelData2MongoDB
 );
 
+router.post("/create", productController.createProduct);
+
 router.get("/getAllProduct", productController.getAllproduct);
 
 router

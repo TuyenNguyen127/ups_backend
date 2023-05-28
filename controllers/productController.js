@@ -42,38 +42,30 @@ const importExcelData2MongoDB = (req, res) => {
                 H: 'wattage',
                 I: 'description',
                 J: 'feature',
-                K: 'Capacity',
-                L: 'Technology',
-                M: 'isolationTransformer',
-                N: 'ACInputVoltage',
-                O: 'VoltageRange',
-                P: 'FrequencyRange',
-                Q: 'powerFactorIN',
-                R: 'OutputACVoltage',
-                S: 'ACVoltageRegulator',
-                T: 'SynFrequencyRange',
-                U: 'BatteryFrequencyRange',
-                V: 'timeACtobattery',
+                K: 'cong_suat',
+                L: 'dai_dien_ap',
+                M: 'tan_so_vao',
+                N: 'so_pha',
+                O: 'dien_ap',
+                P: 'dien_ap_che_do_ac_quy',
+                Q: 'tan_so_ra',
+                R: 'dang_song',
+                S: 'thoi_gian_chuyen_mach',
+                T: 'loai_ac_quy',
+                U: 'thoi_gian_sac',
+                V: 'quan_ly_ac_quy',
                 W: 'timeInterverBypass',
-                X: 'wave',
-                Y: 'powerFactorOUT',
-                Z: 'battery',
-                AA: 'numberOfBattery',
-                AB: 'ChargingCurrent',
-                AC: 'ChargingVoltage',
-                AD: 'ACMode',
-                AE: 'batteryModeEfficiency',
-                AF: 'LCDScreen',
-                AG: 'batteryWaring',
-                AH: 'lowBattery',
-                AI: 'overLoad',
-                AJ: 'error',
-                AK: 'ProductDimensions',
-                AL: 'mass',
-                AM: 'NoiseLevel',
-                AN: 'ActiveHumidity',
-                AO: 'USB',
-                AP: 'phaseNumber',
+                X: 'bv_ngan_mach',
+                Y: 'bv_xung',
+                Z: 'canh_bao',
+                AA: 'bv_qua_tai',
+                AB: 'cong_USB',
+                AC: 'do_on_hd',
+                AD: 'nhiet_do_hd',
+                AE: 'do_am_hd',
+                AF: 'he_so_cong_suat',
+                AG: 'kich_thuoc',
+                AH: 'trong_luong',
             }
         },{
             // Excel Sheet Name
@@ -85,38 +77,29 @@ const importExcelData2MongoDB = (req, res) => {
             // Mapping columns to keys
             columnToKey: {
                 A: 'name',
-                B: 'Capacity',
-                C: 'Technology',
-                D: 'isolationTransformer',
-                E: 'ACInputVoltage',
-                F: 'VoltageRange',
-                G: 'FrequencyRange',
-                H: 'powerFactorIN',
-                I: 'OutputACVoltage',
-                J: 'ACVoltageRegulator',
-                K: 'SynFrequencyRange',
-                L: 'BatteryFrequencyRange',
-                M: 'timeACtobattery',
-                N: 'timeInterverBypass',
-                O: 'wave',
-                P: 'powerFactorOUT',
-                Q: 'battery',
-                R: 'numberOfBattery',
-                S: 'ChargingCurrent',
-                T: 'ChargingVoltage',
-                U: 'ACMode',
-                V: 'batteryModeEfficiency',
-                W: 'LCDScreen',
-                X: 'batteryWaring',
-                Y: 'lowBattery',
-                Z: 'overLoad',
-                AA: 'ChargingCurrent',
-                AB: 'ProductDimensions',
-                AC: 'mass',
-                AD: 'NoiseLevel',
-                AE: 'ActiveHumidity',
-                AF: 'USB',
-                AG: 'phaseNumber',
+                B: 'cong_suat',
+                C: 'dai_dien_ap',
+                D: 'tan_so_vao',
+                E: 'so_pha',
+                F: 'dien_ap',
+                G: 'dien_ap_che_do_ac_quy',
+                H: 'tan_so_ra',
+                I: 'dang_song',
+                J: 'thoi_gian_chuyen_mach',
+                K: 'loai_ac_quy',
+                L: 'thoi_gian_sac',
+                M: 'bv_ngan_mach',
+                N: 'bv_xung',
+                O: 'canh_bao',
+                P: 'bv_qua_tai',
+                Q: 'quan_ly_ac_quy',
+                R: 'cong_USB',
+                S: 'do_on_hd',
+                T: 'nhiet_do_hd',
+                U: 'do_am_hd',
+                V: 'he_so_cong_suat',
+                W: 'kich_thuoc',
+                X: 'trong_luong',
             }
         }]
     });
@@ -132,10 +115,10 @@ const importExcelData2MongoDB = (req, res) => {
         const slug = value.name.toLowerCase().replace(/\s+/g, '-');
         var { name, description, price, category, firm, code, origin, guarantee, wattage, feature } = value;
 
-        const {Capacity, Technology, isolationTransformer, ACInputVoltage, VoltageRange, FrequencyRange, powerFactorIN, 
-            OutputACVoltage, ACVoltageRegulator, SynFrequencyRange, BatteryFrequencyRange, timeACtobattery, timeInterverBypass,
-            wave, powerFactorOUT, battery, numberOfBattery, ChargingCurrent, ChargingVoltage, ACMode, batteryModeEfficiency, 
-            LCDScreen, batteryWaring, lowBattery, overLoad, error, ProductDimensions, mass, NoiseLevel, ActiveHumidity, USB, phaseNumber
+        const {cong_suat, dai_dien_ap, tan_so_vao, so_pha, dien_ap, dien_ap_che_do_ac_quy, tan_so_ra, 
+            dang_song, thoi_gian_chuyen_mach, loai_ac_quy, thoi_gian_sac, bv_ngan_mach, bv_xung,
+            canh_bao, bv_qua_tai, quan_ly_ac_quy, cong_USB, do_on_hd, nhiet_do_hd, do_am_hd, he_so_cong_suat, 
+            kich_thuoc, trong_luong
         } = value;
 
         const category_ = await Category.findOne({where: {name: category}});
@@ -147,23 +130,23 @@ const importExcelData2MongoDB = (req, res) => {
         else firm=undefined;
 
         const product = await Product.create({
-            name, description, price, category, firm, code, origin, guarantee, wattage, feature , url: '/san-pham-' + slug, status: true
+            name, description, price, category, firm, code, origin, guarantee, wattage, feature , status: true
         })
 
         await Info.create({
             productID: product.id,
-            Capacity, Technology, isolationTransformer, ACInputVoltage, VoltageRange, FrequencyRange, powerFactorIN, 
-            OutputACVoltage, ACVoltageRegulator, SynFrequencyRange, BatteryFrequencyRange, timeACtobattery, timeInterverBypass,
-            wave, powerFactorOUT, battery, numberOfBattery, ChargingCurrent, ChargingVoltage, ACMode, batteryModeEfficiency, 
-            LCDScreen, batteryWaring, lowBattery, overLoad, error, ProductDimensions, mass, NoiseLevel, ActiveHumidity, USB, phaseNumber
+            cong_suat, dai_dien_ap, tan_so_vao, so_pha, dien_ap, dien_ap_che_do_ac_quy, tan_so_ra, 
+            dang_song, thoi_gian_chuyen_mach, loai_ac_quy, thoi_gian_sac, bv_ngan_mach, bv_xung,
+            canh_bao, bv_qua_tai, quan_ly_ac_quy, cong_USB, do_on_hd, nhiet_do_hd, do_am_hd, he_so_cong_suat, 
+            kich_thuoc, trong_luong
         })
     })
     
     excelData.Info.map(async (value) => {
-        const {name, Capacity, Technology, isolationTransformer, ACInputVoltage, VoltageRange, FrequencyRange, powerFactorIN, 
-            OutputACVoltage, ACVoltageRegulator, SynFrequencyRange, BatteryFrequencyRange, timeACtobattery, timeInterverBypass,
-            wave, powerFactorOUT, battery, numberOfBattery, ChargingCurrent, ChargingVoltage, ACMode, batteryModeEfficiency, 
-            LCDScreen, batteryWaring, lowBattery, overLoad, error, ProductDimensions, mass, NoiseLevel, ActiveHumidity, USB, phaseNumber
+        const {name, cong_suat, dai_dien_ap, tan_so_vao, so_pha, dien_ap, dien_ap_che_do_ac_quy, tan_so_ra, 
+            dang_song, thoi_gian_chuyen_mach, loai_ac_quy, thoi_gian_sac, bv_ngan_mach, bv_xung,
+            canh_bao, bv_qua_tai, quan_ly_ac_quy, cong_USB, do_on_hd, nhiet_do_hd, do_am_hd, he_so_cong_suat, 
+            kich_thuoc, trong_luong
         } = value;
 
         const product = await Product.findOne({where: {name: name}});
@@ -173,10 +156,10 @@ const importExcelData2MongoDB = (req, res) => {
             await Info.destroy({where: {productID: product.id}});
             await Info.create({
                 productID: product.id,
-                Capacity, Technology, isolationTransformer, ACInputVoltage, VoltageRange, FrequencyRange, powerFactorIN, 
-                OutputACVoltage, ACVoltageRegulator, SynFrequencyRange, BatteryFrequencyRange, timeACtobattery, timeInterverBypass,
-                wave, powerFactorOUT, battery, numberOfBattery, ChargingCurrent, ChargingVoltage, ACMode, batteryModeEfficiency, 
-                LCDScreen, batteryWaring, lowBattery, overLoad, error, ProductDimensions, mass, NoiseLevel, ActiveHumidity, USB, phaseNumber
+                cong_suat, dai_dien_ap, tan_so_vao, so_pha, dien_ap, dien_ap_che_do_ac_quy, tan_so_ra, 
+                dang_song, thoi_gian_chuyen_mach, loai_ac_quy, thoi_gian_sac, bv_ngan_mach, bv_xung,
+                canh_bao, bv_qua_tai, quan_ly_ac_quy, cong_USB, do_on_hd, nhiet_do_hd, do_am_hd, he_so_cong_suat, 
+                kich_thuoc, trong_luong
             })
         }
     })
@@ -209,6 +192,7 @@ const updateProduct = async (req, res, next) => {
                 guarantee: req.body.guarantee,
                 description: req.body.description,
                 feature: req.body.feature,
+                img: req.body.img
             },
             {
                 where: {
@@ -271,10 +255,42 @@ const getProductbyID = async (req, res, next) => {
     }
 };
 
+// @route  [POST] /api/category/create
+const createProduct = async (req, res, next) => {
+    try {
+        const product = await Product.create({
+            name: req.body.parent,
+            category: req.body.category,
+            description: req.body.description,
+            firm: req.body.firm,
+            code: req.body.code,
+            status: req.body.status,
+            origin: req.body.origin,
+            wattage: req.body.wattage,
+            guarantee: req.body.guarantee,
+            feature: req.body.feature,
+            img: req.body.img
+        });
+
+        if (!product) {
+            throw new Error("Details are not correct");
+        }
+
+        return res.status(200).send({
+            success: true,
+            data: product,
+        });
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+};
+
 module.exports = {
     importExcelData2MongoDB,
     getAllproduct,
     updateProduct,
     deleteProduct,
     getProductbyID,
+    createProduct
 };
