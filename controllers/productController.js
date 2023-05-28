@@ -269,7 +269,7 @@ const createProduct = async (req, res, next) => {
             wattage: req.body.wattage,
             guarantee: req.body.guarantee,
             feature: req.body.feature,
-            img: req.body.img
+           // img: req.body.img
         });
 
         if (!product) {
