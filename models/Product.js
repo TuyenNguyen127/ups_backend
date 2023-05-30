@@ -58,10 +58,15 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.STRING,
                 // allowNull: false,
             },
-            // img: {
-            //     type: Sequelize.ARRAY(Sequelize.TEXT),
-            //     defaultValue: [],
-            // }
+            img: {
+                type: DataTypes.STRING,
+                get: function() {
+                    return JSON.parse(this.getDataValue('img'));
+                },
+                set: function(val) {
+                    return this.setDataValue('img', JSON.stringify(val));
+                }
+            }
         },{
             tableName: "Product",
         }
