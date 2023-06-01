@@ -29,6 +29,15 @@ module.exports = (sequelize, DataTypes) =>
             benefit: {
                 type: DataTypes.STRING,
             },
+            img: {
+                type: DataTypes.STRING,
+                get: function() {
+                    return JSON.parse(this.getDataValue('img_category'));
+                },
+                set: function(val) {
+                    return this.setDataValue('img_category', JSON.stringify(val));
+                }
+            }
         },{
             tableName: "Category",
         }

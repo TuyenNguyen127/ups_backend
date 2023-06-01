@@ -61,10 +61,10 @@ module.exports = (sequelize, DataTypes) =>
             img: {
                 type: DataTypes.STRING,
                 get: function() {
-                    return JSON.parse(this.getDataValue('img'));
+                    return JSON.parse(this.getDataValue('img_product'));
                 },
                 set: function(val) {
-                    return this.setDataValue('img', JSON.stringify(val));
+                    return this.setDataValue('img_product', JSON.stringify(val));
                 }
             }
         },{

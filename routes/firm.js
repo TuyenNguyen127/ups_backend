@@ -6,8 +6,7 @@ router.route("/getAllFirm").get(firmController.getAllFirm);
 router.route("/create").post(firmController.createFirm);
 router
   .route("/:id")
-  .patch(firmController.updateFirm)
+  .put(firmController.updateFirm)
   .delete(firmController.deleteFirm)
-  .get(firmController.getFirm);
-
+  .get(firmController.getFirm)
 module.exports = router;

@@ -3,6 +3,16 @@ const { Firm, Product } = require("../models");
 // @route  [POST] /api/firm/create
 const createFirm = async (req, res, next) => {
     try {
+        const p = await Firm.findOne({where: {name:req.body.name} });
+
+        if (p) {
+            // throw new Error("Details are not correct");
+            return res.status(401).send({
+                success: false,
+                message: 'Firm name is exist',
+            });
+        }
+
         const firm = await Firm.create({
             name: req.body.name,
             description: req.body.description
@@ -29,7 +39,8 @@ const updateFirm = async (req, res, next) => {
         const update = await Firm.update(
             {
                 name: req.body.name,
-                description: req.body.description
+                description: req.body.description,
+                img: req.body.img
             },
             {
                 where: {

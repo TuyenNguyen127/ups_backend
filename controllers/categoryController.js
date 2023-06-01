@@ -36,6 +36,16 @@ const getCategoryTree = async (id) => {
 // @route  [POST] /api/category/create
 const createCategory = async (req, res, next) => {
     try {
+        const p = await Category.findOne({where: {name:req.body.name} });
+
+        if (p) {
+            // throw new Error("Details are not correct");
+            return res.status(401).send({
+                success: false,
+                message: 'Category name is exist',
+            });
+        }
+        
         const category = await Category.create({
             parent: req.body.parent,
             name: req.body.name,
@@ -67,7 +77,8 @@ const updateCategory = async (req, res, next) => {
                 description: req.body.description,
                 Characteristic: req.body.Characteristic,
                 benefit: req.body.benefit,
-                parent: req.body.parent
+                parent: req.body.parent,
+                img: req.body.img
             },
             {
                 where: {
@@ -141,8 +152,22 @@ const getCategory = async (req, res) => {
 
         const tree = await getCategoryTree(req.params.id);
         const products = await Product.findAll({where: {category: req.params.id}});
+        if (products.length < 1) {
+            const categories = await Category.findAll({where: { parent: req.params.id.toString() }})
+            return res.status(200).json({ 
+                success: true, 
+                data: categories, 
+                categoryDelta: category, 
+                tree: tree 
+            })
+        }
 
-        return res.status(200).json({ success: true, data: products, categoryDelta: category, tree: tree })
+        return res.status(200).json({ 
+            success: true, 
+            data: products, 
+            categoryDelta: category, 
+            tree: tree 
+        })
 
     } catch (error) {
         return res.status(500).json({

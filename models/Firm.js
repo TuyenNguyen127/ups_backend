@@ -18,6 +18,15 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            img: {
+                type: DataTypes.STRING,
+                get: function() {
+                    return JSON.parse(this.getDataValue('img_firm'));
+                },
+                set: function(val) {
+                    return this.setDataValue('img_firm', JSON.stringify(val));
+                }
+            }
         },{
             tableName: "Firm",
         }

@@ -258,6 +258,17 @@ const getProductbyID = async (req, res, next) => {
 // @route  [POST] /api/category/create
 const createProduct = async (req, res, next) => {
     try {
+        const p1 = await Product.findOne({where: {name:req.body.name} });
+        const p2 = await Product.findOne({where: {code:req.body.code} });
+
+        if (p1 || p2) {
+            // throw new Error("Details are not correct");
+            return res.status(401).send({
+                success: false,
+                message: 'Product is exist',
+            });
+        }
+
         const product = await Product.create({
             name: req.body.name,
             category: req.body.category,
