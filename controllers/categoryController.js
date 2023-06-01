@@ -1,15 +1,16 @@
 const { Category, Product } = require("../models");
 
-function convertToTree(categories, parentId = null) {
+function convertToTree(categories, parentId) {
     const result = [];
-  
+    
     // Lặp qua danh sách các đối tượng
     for (const category of categories) {
-        if (category.parent && category.parent.toString() === parentId) {
+        if (category.parent === parentId) {
             // Tạo một đối tượng mới
             const node = {
+                id: category.id,
                 name: category.name,
-                children: convertToTree(categories, category._id.toString())
+                children: convertToTree(categories, category.id.toString())
             };
     
             // Thêm đối tượng vào kết quả
@@ -116,7 +117,7 @@ const deleteCategory = async (req, res, next) => {
 const getAllCategory = async (req, res, next) => {
     try {
         const categories = await Category.findAll();
-        const tree = convertToTree(categories);
+        const tree = convertToTree(categories, '');
         res.status(200).json({
             success: true,
             data: categories,
