@@ -16,14 +16,14 @@ const Category = CategoryModel(sequelize, DataTypes);
 Firm.hasMany(Product, {
     foreignKey: "firm_id",
     allowNull: true,
-    onDelete: "CASCADE",
+    onDelete: "SET NULL",
     onUpdate: "CASCADE",
 });
 
 Category.hasMany(Product, {
     foreignKey: "category_id",
     allowNull: true,
-    onDelete: "CASCADE",
+    onDelete: "SET NULL",
     onUpdate: "CASCADE",
 });
 

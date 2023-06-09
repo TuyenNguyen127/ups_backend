@@ -5,7 +5,7 @@ const upload = require("../middlewares/upload");
 
 router.post(
   "/uploadfile",
-  upload.single("file"),
+  upload.uploadFile,
   productController.importExcelData2MongoDB
 );
 
@@ -16,7 +16,7 @@ router.get("/getAllProduct", productController.getAllproduct);
 router
   .route("/:id")
   .get(productController.getProductbyID)
-  .patch(productController.updateProduct)
+  .put(productController.updateProduct)
   .delete(productController.deleteProduct);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { Firm, Product } = require("../models");
+const { Firm, Product, Category } = require("../models");
 
 // @route  [POST] /api/firm/create
 const createFirm = async (req, res, next) => {
@@ -102,6 +102,18 @@ const getFirm = async (req, res) => {
     try {
         const firm = await Firm.findOne({where: { id: req.params.id }});
         const products = await Product.findAll({where: {firm: req.params.id}});
+        const formattedProducts = await Promise.all(products.map(async (product) => {
+            const formattedProduct = product.toJSON();
+            if (formattedProduct.category) {
+                const category = await Category.findOne({ where: { id: formattedProduct.category } });
+                formattedProduct.category = category.name;
+            }
+            if (formattedProduct.firm) {
+                const firm = await Firm.findOne({ where: { id: formattedProduct.firm } });
+                formattedProduct.firm = firm.name;
+            }
+            return formattedProduct;
+        }));
         if (!firm) {
             return res.status(401).json({
                 success: false,
@@ -109,7 +121,7 @@ const getFirm = async (req, res) => {
             })
         }
 
-        return res.status(200).json({ success: true, data: products, firm: firm })
+        return res.status(200).json({ success: true, data: formattedProducts, firm: firm })
     } catch (error) {
         return res.status(500).json({
             success: false,

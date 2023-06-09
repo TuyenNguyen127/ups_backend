@@ -1,10 +1,11 @@
 const sequelize = require("../config/db");
 const { Product, Info, Category, Firm } = require("../models");
 var excelToJson = require('convert-excel-to-json');
+const fs = require('fs');
 
 // Hàm tìm kiếm và xây dựng cây dữ liệu
-const getCategoryTree = async (id) => {
-    const category = await Category.findOne({where: {id: id}});
+const getCategoryTree = async (name) => {
+    const category = await Category.findOne({where: {name: name}});
     const result = {
         name: category?.name,
         parent: category.parent ? await getCategoryTree(category?.parent) : {}
@@ -123,11 +124,11 @@ const importExcelData2MongoDB = (req, res) => {
 
         const category_ = await Category.findOne({where: {name: category}});
         if (category_) category= category_.id;
-        else category=undefined;
+        else category=null;
 
         const firm_ = await Firm.findOne({where: {name: firm}});
         if (firm_) firm= firm_.id;
-        else firm=undefined;
+        else firm=null;
 
         const product = await Product.create({
             name, description, price, category, firm, code, origin, guarantee, wattage, feature , status: true
@@ -163,7 +164,10 @@ const importExcelData2MongoDB = (req, res) => {
             })
         }
     })
-
+    fs.unlink(filepath, function (err) {
+        if (err) throw err;
+        console.log('File deleted!');
+    });
     return res.status(200).json({success: true, message: "New infos and products have update"})
 }
 
@@ -171,7 +175,19 @@ const importExcelData2MongoDB = (req, res) => {
 const getAllproduct = async (req, res, next) => {
     try {
         const products = await Product.findAll();
-        res.status(200).json(products);
+        const formattedProducts = await Promise.all(products.map(async (product) => {
+            const formattedProduct = product.toJSON();
+            if (formattedProduct.category) {
+                const category = await Category.findOne({ where: { id: formattedProduct.category } });
+                formattedProduct.category = category.name;
+            }
+            if (formattedProduct.firm) {
+                const firm = await Firm.findOne({ where: { id: formattedProduct.firm } });
+                formattedProduct.firm = firm.name;
+            }
+            return formattedProduct;
+        }));
+        res.status(200).json(formattedProducts);
     } catch (error) {
         res.status(400).json(error);
     }
@@ -188,6 +204,7 @@ const updateProduct = async (req, res, next) => {
                 code: req.body.code,
                 status: req.body.status,
                 origin: req.body.origin,
+                price: req.body.price,
                 wattage: req.body.wattage,
                 guarantee: req.body.guarantee,
                 description: req.body.description,
@@ -244,11 +261,23 @@ const getProductbyID = async (req, res, next) => {
                 id: req.params.id,
             },
         });
-        const tree = await getCategoryTree(product.category);
+        
+        const formattedProduct = product.toJSON();
+        if (formattedProduct.category) {
+            const category = await Category.findOne({ where: { id: formattedProduct.category } });
+            formattedProduct.category = category.name;
+        }
+        if (formattedProduct.firm) {
+            const firm = await Firm.findOne({ where: { id: formattedProduct.firm } });
+            formattedProduct.firm = firm.name;
+        }
+        
+        const category = await Category.findOne({where: {id: product.category}});
+        const tree = await getCategoryTree(category.name);
 
         const info = await Info.findOne({where: { productID: product.id }})
 
-        res.status(200).json({ product: product, info: info, tree: tree});
+        res.status(200).json({ product: formattedProduct, info: info, tree: tree});
         
     } catch (error) {
         res.status(400).json(error);
@@ -273,6 +302,7 @@ const createProduct = async (req, res, next) => {
             name: req.body.name,
             category: req.body.category,
             description: req.body.description,
+            price: req.body.price,
             firm: req.body.firm,
             code: req.body.code,
             status: req.body.status,

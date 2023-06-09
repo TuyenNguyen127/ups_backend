@@ -5,6 +5,7 @@ const router = express.Router();
 router
     .route("/:id")
     .get(infoController.getInfoProduct)
-    .patch(infoController.updateInfoProduct);
+    .put(infoController.updateInfoProduct)
+    .post(infoController.createInfo);
 
 module.exports = router;

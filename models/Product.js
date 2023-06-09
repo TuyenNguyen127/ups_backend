@@ -1,3 +1,5 @@
+const { Sequelize } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         "Product",
@@ -39,6 +41,11 @@ module.exports = (sequelize, DataTypes) =>
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            price: {
+                //xuất xứ
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
             wattage: {
                 //công suất
                 type: DataTypes.STRING,
@@ -61,10 +68,10 @@ module.exports = (sequelize, DataTypes) =>
             img: {
                 type: DataTypes.STRING,
                 get: function() {
-                    return JSON.parse(this.getDataValue('img_product'));
+                    return JSON.parse(this.getDataValue('img'));
                 },
                 set: function(val) {
-                    return this.setDataValue('img_product', JSON.stringify(val));
+                    return this.setDataValue('img', JSON.stringify(val));
                 }
             }
         },{

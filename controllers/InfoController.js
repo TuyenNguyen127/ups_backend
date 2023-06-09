@@ -1,4 +1,5 @@
 const { Info } = require("../models");
+const Product = require("../models/Product");
 
 const getInfoProduct = async (req, res, next) => {
     try {
@@ -7,9 +8,9 @@ const getInfoProduct = async (req, res, next) => {
                 productID: req.params.id,
             },
         });
-        res.status(200).json(productInfo);
+        return res.status(200).json(productInfo);
     } catch (error) {
-        res.status(400).json(error);
+        return res.status(400).json(error);
     }
 };
 
@@ -17,38 +18,29 @@ const updateInfoProduct = async (req, res, next) => {
     try {
         const update = await Info.update(
             {
-                Capacity: req.body.Capacity,
-                Technology: req.body.Technology,
-                phaseNumber: req.body.phaseNumber,
-                isolationTransformer: req.body.isolationTransformer,
-                ACInputVoltage: req.body.ACInputVoltage,
-                VoltageRange: req.body.VoltageRange,
-                FrequencyRange: req.body.FrequencyRange,
-                powerFactorIN: req.body.powerFactorIN,
-                OutputACVoltage: req.body.OutputACVoltage,
-                ACVoltageRegulator: req.body.ACVoltageRegulator,
-                SynFrequencyRange: req.body.SynFrequencyRange,
-                BatteryFrequencyRange: req.body.BatteryFrequencyRange,
-                timeACtobattery: req.body.timeACtobattery,
-                timeInterverBypass: req.body.timeInterverBypass,
-                wave: req.body.wave,
-                powerFactorOUT: req.body.powerFactorOUT,
-                battery: req.body.battery,
-                numberOfBattery: req.body.numberOfBattery,
-                ChargingCurrent: req.body.ChargingCurrent,
-                ChargingVoltage: req.body.ChargingVoltage,
-                ACMode: req.body.ACMode,
-                batteryModeEfficiency: req.body.batteryModeEfficiency,
-                LCDScreen: req.body.LCDScreen,
-                batteryWaring: req.body.batteryWaring,
-                lowBattery: req.body.lowBattery,
-                overLoad: req.body.overLoad,
-                error: req.body.error,
-                ProductDimensions: req.body.ProductDimensions,
-                mass: req.body.mass,
-                NoiseLevel: req.body.NoiseLevel,
-                ActiveHumidity: req.body.ActiveHumidity,
-                USB: req.body.USB,
+                cong_suat: req.body.cong_suat, 
+                dai_dien_ap: req.body.dai_dien_ap, 
+                tan_so_vao: req.body.tan_so_ra, 
+                so_pha: req.body.so_pha, 
+                dien_ap: req.body.dien_ap, 
+                dien_ap_che_do_ac_quy: req.body.dien_ap_che_do_ac_quy, 
+                tan_so_ra: req.body.tan_so_ra, 
+                dang_song: req.body.dang_song, 
+                thoi_gian_chuyen_mach: req.body.thoi_gian_chuyen_mach, 
+                loai_ac_quy: req.body.loai_ac_quy, 
+                thoi_gian_sac: req.body.thoi_gian_sac, 
+                bv_ngan_mach: req.body.bv_ngan_mach, 
+                bv_xung: req.body.bv_xung,
+                canh_bao: req.body.canh_bao, 
+                bv_qua_tai: req.body.bv_qua_tai, 
+                quan_ly_ac_quy: req.body.quan_ly_ac_quy, 
+                cong_USB: req.body.cong_USB, 
+                do_on_hd: req.body.do_on_hd, 
+                nhiet_do_hd: req.body.nhiet_do_hd, 
+                do_am_hd: req.body.do_am_hd, 
+                he_so_cong_suat: req.body.he_so_cong_suat, 
+                kich_thuoc: req.body.kich_thuoc, 
+                trong_luong: req.body.trong_luong
             },
             {
                 where: {
@@ -72,7 +64,54 @@ const updateInfoProduct = async (req, res, next) => {
     }
 };
 
+const createInfo = async (req, res, next) => {
+    try {
+        const i = await Info.findOne({where: {productID: req.params.id}})
+        if (i) return res.status(400).json({message: 'Info product is exits'})
+        const info = await Info.create(
+            {
+                productID: req.params.id,
+                cong_suat: req.body.cong_suat, 
+                dai_dien_ap: req.body.dai_dien_ap, 
+                tan_so_vao: req.body.tan_so_ra, 
+                so_pha: req.body.so_pha, 
+                dien_ap: req.body.dien_ap, 
+                dien_ap_che_do_ac_quy: req.body.dien_ap_che_do_ac_quy, 
+                tan_so_ra: req.body.tan_so_ra, 
+                dang_song: req.body.dang_song, 
+                thoi_gian_chuyen_mach: req.body.thoi_gian_chuyen_mach, 
+                loai_ac_quy: req.body.loai_ac_quy, 
+                thoi_gian_sac: req.body.thoi_gian_sac, 
+                bv_ngan_mach: req.body.bv_ngan_mach, 
+                bv_xung: req.body.bv_xung,
+                canh_bao: req.body.canh_bao, 
+                bv_qua_tai: req.body.bv_qua_tai, 
+                quan_ly_ac_quy: req.body.quan_ly_ac_quy, 
+                cong_USB: req.body.cong_USB, 
+                do_on_hd: req.body.do_on_hd, 
+                nhiet_do_hd: req.body.nhiet_do_hd, 
+                do_am_hd: req.body.do_am_hd, 
+                he_so_cong_suat: req.body.he_so_cong_suat, 
+                kich_thuoc: req.body.kich_thuoc, 
+                trong_luong: req.body.trong_luong
+            }
+        );
+
+        if (!info) {
+            throw new Error("Details are not correct");
+        }
+
+        return res.status(200).send({
+            success: true,
+        });
+    } catch (error) {
+        res.status(400).json(error);
+        return next(error);
+    }
+};
+
 module.exports = {
     getInfoProduct,
     updateInfoProduct,
+    createInfo
 };

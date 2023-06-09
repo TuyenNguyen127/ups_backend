@@ -11,13 +11,14 @@ const login = async (req, res, next) => {
         });
 
         if (!user) {
-            return res.status(200).json("Account does not exist!");
+            console.log(req.body);
+            return res.status(400).json({message: "Account does not exist!", success: false});
         }
 
         if (password == user.password) {
-            return res.status(200).json("Login success!");
+            return res.status(200).json({message: "Login success!", success: true});
         } else {
-            return res.status(200).json("Incorrect password!");
+            return res.status(400).json({message: "Incorrect password!", success:false});
         }
     } catch (error) {
         res.status(400).json(error);

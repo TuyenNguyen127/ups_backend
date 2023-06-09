@@ -32,10 +32,10 @@ module.exports = (sequelize, DataTypes) =>
             img: {
                 type: DataTypes.STRING,
                 get: function() {
-                    return JSON.parse(this.getDataValue('img_category'));
+                    return JSON.parse(this.getDataValue('img'));
                 },
                 set: function(val) {
-                    return this.setDataValue('img_category', JSON.stringify(val));
+                    return this.setDataValue('img', JSON.stringify(val));
                 }
             }
         },{

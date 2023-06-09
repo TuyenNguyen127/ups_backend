@@ -1,4 +1,4 @@
-const { Category, Product } = require("../models");
+const { Category, Product, Firm } = require("../models");
 
 function convertToTree(categories, parentId) {
     const result = [];
@@ -10,7 +10,7 @@ function convertToTree(categories, parentId) {
             const node = {
                 id: category.id,
                 name: category.name,
-                children: convertToTree(categories, category.id.toString())
+                children: convertToTree(categories, category.name.toString())
             };
     
             // Thêm đối tượng vào kết quả
@@ -22,8 +22,8 @@ function convertToTree(categories, parentId) {
 }
 
 // Hàm tìm kiếm và xây dựng cây dữ liệu
-const getCategoryTree = async (id) => {
-    const category = await Category.findOne({where: {id: id}});
+const getCategoryTree = async (name) => {
+    const category = await Category.findOne({where: {name: name}});
     const result = {
         name: category?.name,
         parent: category.parent ? await getCategoryTree(category?.parent) : {}
@@ -38,11 +38,11 @@ const createCategory = async (req, res, next) => {
     try {
         const p = await Category.findOne({where: {name:req.body.name} });
 
-        if (p) {
+        if (p || req.body.name === '') {
             // throw new Error("Details are not correct");
             return res.status(401).send({
                 success: false,
-                message: 'Category name is exist',
+                message: 'Category name is exist or is null',
             });
         }
         
@@ -129,6 +129,12 @@ const getAllCategory = async (req, res, next) => {
     try {
         const categories = await Category.findAll();
         const tree = convertToTree(categories, '');
+        categories.map(async category => {
+            if (category.parent) {
+                const category_ = await Category.findOne({where: {id: category.parent}})
+            }
+
+        })
         res.status(200).json({
             success: true,
             data: categories,
@@ -150,10 +156,11 @@ const getCategory = async (req, res) => {
             })
         }
 
-        const tree = await getCategoryTree(req.params.id);
+        const tree = await getCategoryTree(category.name);
         const products = await Product.findAll({where: {category: req.params.id}});
         if (products.length < 1) {
-            const categories = await Category.findAll({where: { parent: req.params.id.toString() }})
+            console.log(category);
+            const categories = await Category.findAll({where: { parent: category.name }})
             return res.status(200).json({ 
                 success: true, 
                 data: categories, 
@@ -162,14 +169,28 @@ const getCategory = async (req, res) => {
             })
         }
 
+        const formattedProducts = await Promise.all(products.map(async (product) => {
+            const formattedProduct = product.toJSON();
+            if (formattedProduct.category) {
+                const category = await Category.findOne({ where: { id: formattedProduct.category } });
+                formattedProduct.category = category.name;
+            }
+            if (formattedProduct.firm) {
+                const firm = await Firm.findOne({ where: { id: formattedProduct.firm } });
+                formattedProduct.firm = firm.name;
+            }
+            return formattedProduct;
+        }));
+
         return res.status(200).json({ 
             success: true, 
-            data: products, 
+            data: formattedProducts, 
             categoryDelta: category, 
             tree: tree 
         })
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             success: false,
             error,
