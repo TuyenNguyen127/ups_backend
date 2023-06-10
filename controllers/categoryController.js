@@ -52,6 +52,7 @@ const createCategory = async (req, res, next) => {
             description: req.body.description,
             Characteristic: req.body.Characteristic,
             benefit: req.body.benefit,
+            img: req.body.img
         });
 
         if (!category) {
@@ -105,19 +106,70 @@ const updateCategory = async (req, res, next) => {
 // [DELETE]
 const deleteCategory = async (req, res, next) => {
     try {
-        const category = await Category.destroy({
-            where: {
-                id: req.params.id
+        const products = await Product.findAll(
+            {
+                where: {
+                    category: req.params.id,
+                }
             }
-        });
-
-        if (!category) {
-            throw new Error("Details are not correct");
+        );
+        const c = await Category.findOne({where: {id: req.params.id}})
+        await Category.update(
+            {
+                parent: null,
+                img: c.img
+            },
+            {
+                where: {parent: c.name}
+            }
+        )
+        
+        if (products.length > 0) {
+            products.map(async (product, index) => {
+                console.log(product.id);
+                await Product.update(
+                    {
+                        category: null,
+                        img: product.img,
+                    },
+                    {
+                        where: {
+                            id: product.id,
+                        },
+                    }
+                )
+                if (index === products.length - 1) {
+                    const category = await Category.destroy({
+                        where: {
+                            id: req.params.id
+                        }
+                    });
+        
+                    if (!category) {
+                        throw new Error("Details are not correct");
+                    }
+        
+                    return res.status(200).send({
+                        success: true,
+                    });
+                }
+            })
+            
+        } else {
+            const category = await Category.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+    
+            if (!category) {
+                throw new Error("Details are not correct");
+            }
+    
+            return res.status(200).send({
+                success: true,
+            });
         }
-
-        return res.status(200).send({
-            success: true,
-        });
 
     } catch (error) {
         next(error);

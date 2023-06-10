@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const route = require("./routes");
 
 const app = express();
+app.use('/uploads', express.static(path.join(__dirname, "uploads")));
 
 // enables CORS
 app.use(

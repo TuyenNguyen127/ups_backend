@@ -15,7 +15,8 @@ const createFirm = async (req, res, next) => {
 
         const firm = await Firm.create({
             name: req.body.name,
-            description: req.body.description
+            description: req.body.description,
+            img: req.body.img
         });
 
         if (!firm) {
@@ -66,19 +67,60 @@ const updateFirm = async (req, res, next) => {
 // [DELETE]
 const deleteFirm = async (req, res, next) => {
     try {
-        const firm = await Firm.destroy({
-            where: {
-                id: req.params.id
+        const products = await Product.findAll(
+            {
+                where: {
+                    firm: req.params.id,
+                }
             }
-        });
-
-        if (!firm) {
-            throw new Error("Details are not correct");
+        );
+        
+        if (products.length > 0) {
+            products.map(async (product, index) => {
+                console.log(product.id);
+                await Product.update(
+                    {
+                        firm: null,
+                        img: product.img,
+                    },
+                    {
+                        where: {
+                            id: product.id,
+                        },
+                    }
+                )
+                if (index === products.length - 1) {
+                    const firm = await Firm.destroy({
+                        where: {
+                            id: req.params.id
+                        }
+                    });
+        
+                    if (!firm) {
+                        throw new Error("Details are not correct");
+                    }
+        
+                    return res.status(200).send({
+                        success: true,
+                    });
+                }
+            })
+            
+        } else {
+            const firm = await Firm.destroy({
+                where: {
+                    id: req.params.id
+                }
+            });
+    
+            if (!firm) {
+                throw new Error("Details are not correct");
+            }
+    
+            return res.status(200).send({
+                success: true,
+            });
         }
-
-        return res.status(200).send({
-            success: true,
-        });
 
     } catch (error) {
         next(error);

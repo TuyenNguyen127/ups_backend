@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) =>
                 unique: "name",
             },
             parent: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING,
                 allowNull: true,
             },
             description: {

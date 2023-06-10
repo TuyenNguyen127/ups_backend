@@ -199,6 +199,7 @@ const updateProduct = async (req, res, next) => {
         const update = await Product.update(
             {
                 productLineId: req.body.productLineId,
+                category: req.body.category,
                 name: req.body.name,
                 firm: req.body.firm,
                 code: req.body.code,
@@ -261,23 +262,38 @@ const getProductbyID = async (req, res, next) => {
                 id: req.params.id,
             },
         });
+        var tree1 = {}
         
         const formattedProduct = product.toJSON();
         if (formattedProduct.category) {
             const category = await Category.findOne({ where: { id: formattedProduct.category } });
             formattedProduct.category = category.name;
+            const tree2 = await getCategoryTree(category.name);
+            tree1 = tree2;
         }
         if (formattedProduct.firm) {
             const firm = await Firm.findOne({ where: { id: formattedProduct.firm } });
             formattedProduct.firm = firm.name;
         }
-        
-        const category = await Category.findOne({where: {id: product.category}});
-        const tree = await getCategoryTree(category.name);
 
         const info = await Info.findOne({where: { productID: product.id }})
 
-        res.status(200).json({ product: formattedProduct, info: info, tree: tree});
+        res.status(200).json({ product: formattedProduct, info: info, tree: tree1});
+        
+    } catch (error) {
+        res.status(400).json(error);
+    }
+};
+
+const getProductbyID2 = async (req, res, next) => {
+    try {
+        const product = await Product.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
+
+        res.status(200).json({ product: product});
         
     } catch (error) {
         res.status(400).json(error);
@@ -334,4 +350,5 @@ module.exports = {
     deleteProduct,
     getProductbyID,
     createProduct,
+    getProductbyID2
 };

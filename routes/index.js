@@ -14,15 +14,15 @@ const route = (app) => {
     app.use("/api/category", categoryRouter);
     app.use("/api/product", productRouter);
     app.use("/api/info", infoRouter);
-    app.post("/uploadImg", uploadImg, (req,res) => {
-        const link = __basedir + '/uploads/' + req.file.filename;
+    app.post("/api/uploadImg", uploadImg, (req,res) => {
+        const link = 'http://localhost:8080/uploads/' + req.file.filename;
         try {
             return res.status(200).json({links: link})
         } catch(e) {
             return res.status(400).json(e);
         }
     });
-    app.post("/deleteImg", (req, res) => {
+    app.post("/api/deleteImg", (req, res) => {
         const link = req.body.link;
         console.log(link);
         try {
