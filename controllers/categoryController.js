@@ -36,7 +36,7 @@ const getCategoryTree = async (name) => {
 // @route  [POST] /api/category/create
 const createCategory = async (req, res, next) => {
     try {
-        const p = await Category.findOne({where: {name:req.body.name} });
+        const p = await Category.findOne({where: {name: req.body.name} });
 
         if (p || req.body.name === '') {
             // throw new Error("Details are not correct");
